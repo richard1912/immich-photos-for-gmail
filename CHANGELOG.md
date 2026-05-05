@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.8 (2026-05-05)
+
+### Changed
+- Settings: the placeholder for the Immich base URL is now `https://demo.immich.app`, so first-time users can try the public demo instance immediately without needing their own server set up.
+
 ## 0.2.7 (2026-05-05)
 
 ### Fixed
