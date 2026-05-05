@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.16 (2026-05-06)
+
+### Added
+- Auto-save the Immich URL and API key as you type in the options page, so credentials aren't lost if the popup closes before clicking Save & Connect. Flushes on `blur` and `pagehide` so the last keystroke commits before the popup tears down.
+- Extension logo and required API-key permissions list (`asset.read`, `asset.download`, `asset.view`, `album.read`, `albumAsset.read`, `search.read`) in the options header / help.
+
+### Changed
+- Options page now fits the toolbar popup without scrolling: tightened spacing throughout, fixed 380px width, and the API-key help collapses into a `<details>` until expanded.
+
+### Fixed
+- Toolbar action no longer goes laggy/unresponsive after editing the URL — pending storage writes are now drained on popup close instead of being left in flight.
+
 ## 0.2.14 (2026-05-05)
 
 ### Fixed
