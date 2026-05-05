@@ -239,9 +239,14 @@ function initPicker() {
       for (const a of albums || []) {
         const card = document.createElement("div");
         card.className = "album-card";
+
         const cover = document.createElement("div");
         cover.className = "cover";
+        const coverImg = document.createElement("img");
+        coverImg.alt = "";
+        cover.appendChild(coverImg);
         card.appendChild(cover);
+
         const meta = document.createElement("div");
         meta.className = "meta";
         meta.innerHTML = `<div class="name"></div><div class="count"></div>`;
@@ -250,10 +255,7 @@ function initPicker() {
         card.appendChild(meta);
 
         if (a.albumThumbnailAssetId) {
-          const tmp = new Image();
-          loadThumb(a.albumThumbnailAssetId, tmp).then(() => {
-            if (tmp.src) cover.style.backgroundImage = `url(${tmp.src})`;
-          });
+          loadThumb(a.albumThumbnailAssetId, coverImg);
         }
 
         card.addEventListener("click", () => openAlbum(a.id, a.albumName));

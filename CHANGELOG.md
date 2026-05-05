@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.3 (2026-05-05)
+
+### Fixed
+- Albums tab rendered as a stack of empty bordered rows instead of a grid of square album cards. The cover area was relying on `aspect-ratio` inside a flex column, which collapsed in some Firefox layout paths. Cover now uses a `position: relative` + `padding-bottom: 100%` square with a real `<img>` child loaded via the same thumbnail path the asset grid uses.
+
 ## 0.2.2 (2026-05-05)
 
 ### Fixed

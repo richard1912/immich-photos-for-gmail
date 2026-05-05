@@ -87,15 +87,21 @@ body {
   overflow: hidden;
   border: 1px solid #e0e0e0;
   background: #fafafa;
-  display: flex;
-  flex-direction: column;
 }
 .album-card:hover { border-color: #1a73e8; }
 .album-card .cover {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
   background: #ddd;
-  aspect-ratio: 1 / 1;
-  background-size: cover;
-  background-position: center;
+}
+.album-card .cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .album-card .meta {
   padding: 8px 10px;
