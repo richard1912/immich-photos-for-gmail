@@ -34,7 +34,7 @@ $("save").addEventListener("click", async () => {
   if (!baseUrl) { setStatus("Enter your Immich base URL.", "err"); return; }
   if (!apiKey) { setStatus("Enter your Immich API key.", "err"); return; }
   const origin = originPattern(baseUrl);
-  if (!origin) { setStatus("Invalid URL — must be https://host", "err"); return; }
+  if (!origin) { setStatus("Invalid URL. Must be https://host", "err"); return; }
 
   setStatus("Requesting site access…", "");
   let granted;

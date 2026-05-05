@@ -110,7 +110,7 @@ browser.runtime.onInstalled.addListener(async (details) => {
   try {
     await browser.runtime.openOptionsPage();
   } catch (_) {
-    // Falls through silently — user can still open via about:addons.
+    // Falls through silently. User can still open via about:addons.
   }
 });
 

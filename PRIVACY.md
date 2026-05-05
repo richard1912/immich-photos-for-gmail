@@ -6,9 +6,9 @@
 
 The extension stores three small pieces of data in your browser, via `browser.storage.local`:
 
-1. **`baseUrl`** — the Immich URL you enter on the settings page (e.g. `https://immich.example.com`).
-2. **`apiKey`** — the API key you generate inside your Immich account.
-3. **`attachOpts`** — the on/off state of the "Resize to 1080p & strip metadata" checkbox.
+1. **`baseUrl`**: the Immich URL you enter on the settings page (e.g. `https://immich.example.com`).
+2. **`apiKey`**: the API key you generate inside your Immich account.
+3. **`attachOpts`**: the on/off state of the "Resize to 1080p & strip metadata" checkbox.
 
 These values stay on your device. They are not synced to any server, are not transmitted anywhere by the extension, and are removed when you uninstall the extension.
 

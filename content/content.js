@@ -1,5 +1,5 @@
 (() => {
-  // Guard against double-injection on extension reload — otherwise duplicate
+  // Guard against double-injection on extension reload, otherwise duplicate
   // click handlers would fire and produce duplicate attachments.
   if (window.__IMMICH_CONTENT_LOADED__) return;
   window.__IMMICH_CONTENT_LOADED__ = true;

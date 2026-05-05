@@ -31,7 +31,7 @@
   }
 
   // Populate Gmail's existing "Filedata" file input. Gmail wires a change
-  // handler on it that uploads the file as a real attachment chip — same code
+  // handler on it that uploads the file as a real attachment chip, same code
   // path as clicking the paperclip + picking a file from disk.
   function attachViaFileInput(target, files) {
     const compose = target.closest('[role="dialog"]') || document;
@@ -50,7 +50,7 @@
       ).set;
       nativeSetter.call(input, dt.files);
       log("set input.files, count=", input.files.length);
-      // Only dispatch 'change' — Gmail's handler reacts to that. Firing 'input'
+      // Only dispatch 'change'. Gmail's handler reacts to that. Firing 'input'
       // as well caused the file to be uploaded twice.
       input.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
       return input.files.length === files.length;
@@ -83,7 +83,7 @@
     if (attachViaFileInput(target, files)) {
       log("done");
     } else {
-      warn("attachment failed — no file input available in this compose dialog");
+      warn("attachment failed: no file input available in this compose dialog");
     }
   });
 })();
