@@ -82,42 +82,50 @@ body {
 }
 .album-list[hidden] { display: none; }
 .album-card {
+  position: relative;
   cursor: pointer;
   border-radius: 8px;
   overflow: hidden;
-  border: 1px solid #e0e0e0;
-  background: #fafafa;
-  min-height: 220px;
-}
-.album-card:hover { border-color: #1a73e8; }
-.album-card .cover {
-  position: relative;
-  width: 100%;
-  padding-bottom: 100%;
   background: #ddd;
+  aspect-ratio: 1 / 1;
+  min-height: 180px;
 }
-.album-card .cover img {
+.album-card:hover { box-shadow: 0 0 0 2px #1a73e8; }
+.album-card .cover {
   position: absolute;
   inset: 0;
+}
+.album-card .cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 .album-card .meta {
-  padding: 10px 12px 12px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 28px 12px 10px;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.78) 70%, rgba(0,0,0,0.85) 100%);
+  color: #fff;
+  pointer-events: none;
 }
-.album-card .meta .name {
+.album-card .name {
   font-size: 14px;
   font-weight: 600;
-  color: #202124;
   line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
   margin-bottom: 2px;
 }
-.album-card .meta .count { color: #5f6368; font-size: 12px; }
+.album-card .count {
+  font-size: 12px;
+  color: rgba(255,255,255,0.85);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+}
 
 .grid-wrap {
   flex: 1;
@@ -182,7 +190,33 @@ body {
 }
 .status[hidden] { display: none; }
 .status .status-text { font-size: 14px; font-weight: 500; letter-spacing: 0.1px; }
-.status.error { color: #c5221f; padding: 20px; text-align: center; }
+.status.error {
+  color: #c5221f;
+  padding: 24px 28px;
+  text-align: left;
+  align-items: stretch;
+  justify-content: flex-start;
+  pointer-events: auto;
+  overflow: auto;
+}
+.status.error .err-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.status.error pre {
+  margin: 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #5f6368;
+  background: #fce8e6;
+  border: 1px solid #f4c7c3;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
 .spinner {
   width: 28px;
   height: 28px;

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.7 (2026-05-05)
+
+### Fixed
+- Album titles were not visible. The previous layout put name+count in a meta block below a square cover, which got clipped to the cover height by a CSS Grid + intrinsic-ratio interaction. Title and item count are now overlaid on the bottom of the cover with a dark gradient, so they are always visible regardless of how the grid sizes the card.
+
+### Changed
+- API and network errors now report multi-line, structured context: HTTP method + URL, status code, the first 400 chars of the server response, plus a status-specific hint (e.g. 401 -> "API key is invalid", 404 -> "make sure the base URL is right and has no /api suffix"). Network-layer failures (TLS, DNS, blocked origin) are explained too. The picker renders the error in a monospace block so URLs and JSON snippets stay readable, and the same text is also printed to the console.
+- Thumbnail load failures now log the underlying error to `console.warn` so individual broken thumbs are debuggable in dev tools.
+
 ## 0.2.6 (2026-05-05)
 
 ### Changed

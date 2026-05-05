@@ -104,8 +104,20 @@ function initPicker() {
     els.loading.hidden = kind !== "loading";
     els.empty.hidden = kind !== "empty";
     els.error.hidden = kind !== "error";
-    if (kind === "error") els.error.textContent = message || "Something went wrong";
-    else if (kind !== "error") els.error.textContent = "";
+    if (kind === "error") {
+      const text = String(message || "Something went wrong");
+      els.error.innerHTML = "";
+      const title = document.createElement("div");
+      title.className = "err-title";
+      title.textContent = "Couldn't load from Immich";
+      const pre = document.createElement("pre");
+      pre.textContent = text;
+      els.error.appendChild(title);
+      els.error.appendChild(pre);
+      console.warn("[immich-picker] error:\n" + text);
+    } else {
+      els.error.innerHTML = "";
+    }
   }
   function showError(msg) { setStatus("error", String(msg)); }
   function clearError() { if (!els.error.hidden) setStatus("none"); }
@@ -123,6 +135,7 @@ function initPicker() {
       imgEl.src = url;
     } catch (e) {
       imgEl.alt = "thumb error";
+      console.warn("[immich-picker] thumb load failed for", assetId, "\n" + (e && e.message || e));
     }
   }
 
@@ -243,6 +256,7 @@ function initPicker() {
       for (const a of albums || []) {
         const card = document.createElement("div");
         card.className = "album-card";
+        card.title = a.albumName || "(untitled)";
 
         const cover = document.createElement("div");
         cover.className = "cover";
@@ -253,9 +267,14 @@ function initPicker() {
 
         const meta = document.createElement("div");
         meta.className = "meta";
-        meta.innerHTML = `<div class="name"></div><div class="count"></div>`;
-        meta.querySelector(".name").textContent = a.albumName || "(untitled)";
-        meta.querySelector(".count").textContent = `${a.assetCount || 0} items`;
+        const nameEl = document.createElement("div");
+        nameEl.className = "name";
+        nameEl.textContent = a.albumName || "(untitled)";
+        const countEl = document.createElement("div");
+        countEl.className = "count";
+        countEl.textContent = `${a.assetCount || 0} items`;
+        meta.appendChild(nameEl);
+        meta.appendChild(countEl);
         card.appendChild(meta);
 
         if (a.albumThumbnailAssetId) {

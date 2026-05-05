@@ -6,35 +6,79 @@ async function getConfig() {
   };
 }
 
+// Map an HTTP status or thrown fetch error into a multi-line, actionable
+// message. Each line is a separate piece of context that the picker renders
+// stacked, so the user sees: what happened, where, what the server said,
+// and what to try next.
+function explainHttp(method, url, status, body) {
+  const head = `HTTP ${status} from ${method} ${url}`;
+  const trimmed = (body || "").trim();
+  const snippet = trimmed.slice(0, 400);
+  let hint = "";
+  if (status === 401) hint = "API key is invalid or missing. Re-check it in Settings.";
+  else if (status === 403) hint = "API key does not have access to this resource. Check the key's permissions in Immich.";
+  else if (status === 404) hint = "Endpoint not found. Make sure the base URL points at your Immich install (no /api suffix).";
+  else if (status === 429) hint = "Immich is rate-limiting requests. Wait a moment and try again.";
+  else if (status >= 500) hint = "Immich server error. Check the Immich server logs.";
+  return [head, snippet ? `Response: ${snippet}` : null, hint].filter(Boolean).join("\n");
+}
+
+function explainFetchError(method, url, err) {
+  const msg = String(err && err.message || err);
+  const head = `Could not reach ${method} ${url}`;
+  let hint = `Reason: ${msg}`;
+  if (/NetworkError|Failed to fetch|Load failed|TypeError/i.test(msg)) {
+    hint = `Reason: ${msg}\nThis usually means one of: (a) the URL is wrong, (b) Firefox does not have permission to reach this origin (open Settings and click Save & Connect again), or (c) the server is unreachable from this machine.`;
+  } else if (/SSL|certificate|TLS/i.test(msg)) {
+    hint = `Reason: ${msg}\nFirefox refused the TLS handshake. Check that the Immich server has a valid certificate.`;
+  }
+  return [head, hint].filter(Boolean).join("\n");
+}
+
 async function immichJson(path, { method = "GET", body } = {}) {
   const { baseUrl, apiKey } = await getConfig();
-  if (!baseUrl) throw new Error("Immich URL not configured. Open the extension options.");
-  if (!apiKey) throw new Error("Immich API key not configured. Open the extension options.");
-  const res = await fetch(`${baseUrl}${path}`, {
-    method,
-    headers: {
-      "x-api-key": apiKey,
-      "Accept": "application/json",
-      ...(body ? { "Content-Type": "application/json" } : {}),
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  if (!baseUrl) throw new Error("Immich URL not configured. Open the extension Settings and click Save & Connect.");
+  if (!apiKey) throw new Error("Immich API key not configured. Open the extension Settings and click Save & Connect.");
+  const url = `${baseUrl}${path}`;
+  let res;
+  try {
+    res = await fetch(url, {
+      method,
+      headers: {
+        "x-api-key": apiKey,
+        "Accept": "application/json",
+        ...(body ? { "Content-Type": "application/json" } : {}),
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch (err) {
+    throw new Error(explainFetchError(method, url, err));
+  }
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`Immich ${method} ${path} → ${res.status}: ${text.slice(0, 200)}`);
+    throw new Error(explainHttp(method, url, res.status, text));
   }
-  return res.json();
+  try {
+    return await res.json();
+  } catch (err) {
+    throw new Error(`Could not parse JSON from ${method} ${url}\nReason: ${err && err.message || err}`);
+  }
 }
 
 async function immichBytes(path) {
   const { baseUrl, apiKey } = await getConfig();
-  if (!baseUrl) throw new Error("Immich URL not configured.");
-  if (!apiKey) throw new Error("Immich API key not configured.");
-  const res = await fetch(`${baseUrl}${path}`, {
-    headers: { "x-api-key": apiKey },
-  });
+  if (!baseUrl) throw new Error("Immich URL not configured. Open Settings.");
+  if (!apiKey) throw new Error("Immich API key not configured. Open Settings.");
+  const url = `${baseUrl}${path}`;
+  let res;
+  try {
+    res = await fetch(url, { headers: { "x-api-key": apiKey } });
+  } catch (err) {
+    throw new Error(explainFetchError("GET", url, err));
+  }
   if (!res.ok) {
-    throw new Error(`Immich GET ${path} → ${res.status}`);
+    const text = await res.text().catch(() => "");
+    throw new Error(explainHttp("GET", url, res.status, text));
   }
   const buffer = await res.arrayBuffer();
   const mime = res.headers.get("Content-Type") || "application/octet-stream";
