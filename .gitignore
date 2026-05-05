@@ -1,0 +1,13 @@
+# Build artifacts
+*.xpi
+*.zip
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Node (in case web-ext is added later)
+node_modules/
+package-lock.json

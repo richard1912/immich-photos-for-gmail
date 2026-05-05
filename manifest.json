@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "Immich Photos for Gmail",
+  "short_name": "Immich for Gmail",
+  "version": "0.2.0",
+  "description": "Attach photos from your self-hosted Immich library directly into Gmail compose windows.",
+  "homepage_url": "https://github.com/richard1912/immich-photos-for-gmail",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "immich-photos-for-gmail@richard1912.github.io",
+      "strict_min_version": "128.0"
+    }
+  },
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png",
+    "512": "icons/icon-512.png"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["page-bridge.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
+  "host_permissions": [
+    "https://mail.google.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ],
+  "permissions": ["storage"],
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "action": {
+    "default_title": "Immich Photos for Gmail",
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    },
+    "default_popup": "options/options.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "picker/picker.html",
+        "picker/picker.js",
+        "picker/picker.css"
+      ],
+      "matches": ["https://mail.google.com/*"]
+    }
+  ]
+}

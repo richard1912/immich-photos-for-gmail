@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Immich Picker</title>
+  <link rel="stylesheet" href="picker.css" />
+</head>
+<body>
+  <header class="hdr">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="recent" role="tab">Recent</button>
+      <button class="tab" data-tab="search" role="tab">Search</button>
+      <button class="tab" data-tab="albums" role="tab">Albums</button>
+    </div>
+    <button class="close-btn" id="close" title="Close">×</button>
+  </header>
+
+  <section class="toolbar" id="toolbar">
+    <input type="search" id="search-input" placeholder="Search photos (people, places, things, dates)…" autocomplete="off" />
+    <button id="search-btn">Search</button>
+  </section>
+
+  <section class="album-list" id="album-list" hidden></section>
+
+  <section class="grid-wrap">
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>No photos found.</div>
+    <div class="loading" id="loading" hidden>Loading…</div>
+    <div class="error" id="error" hidden></div>
+    <div class="sentinel" id="sentinel"></div>
+  </section>
+
+  <footer class="ftr">
+    <button id="cancel">Cancel</button>
+    <label class="opt" title="Downscale longest side to 1920px (if larger) and re-encode as JPEG q=0.9, which also drops EXIF / GPS / camera metadata.">
+      <input type="checkbox" id="opt-shrink" />
+      <span>Resize to 1080p &amp; strip metadata</span>
+    </label>
+    <span class="spacer"></span>
+    <span class="count" id="count">0 selected</span>
+    <button id="attach" class="primary" disabled>Attach</button>
+  </footer>
+
+  <script src="picker.js"></script>
+</body>
+</html>

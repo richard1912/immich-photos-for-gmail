@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Immich Photos for Gmail — Settings</title>
+  <style>
+    body {
+      font-family: "Google Sans", Roboto, Arial, sans-serif;
+      padding: 24px;
+      max-width: 560px;
+      color: #202124;
+      line-height: 1.5;
+    }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    .sub { color: #5f6368; font-size: 13px; margin-bottom: 20px; }
+    label { display: block; font-size: 13px; font-weight: 500; margin: 16px 0 4px; }
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    input:focus { border-color: #1a73e8; outline: none; }
+    .row { display: flex; gap: 10px; margin-top: 20px; align-items: center; flex-wrap: wrap; }
+    button {
+      padding: 10px 20px;
+      border: 0;
+      background: #1a73e8;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 14px;
+    }
+    button:hover { background: #1765cc; }
+    .status { font-size: 13px; }
+    .status.ok { color: #1e8e3e; }
+    .status.err { color: #c5221f; }
+    .hint { font-size: 12px; color: #5f6368; margin-top: 6px; }
+    .help {
+      margin-top: 28px;
+      padding: 14px 16px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #3c4043;
+    }
+    .help h2 { font-size: 14px; margin: 0 0 8px; }
+    .help ol { margin: 0; padding-left: 20px; }
+    .help li { margin-bottom: 4px; }
+    code {
+      background: #e8eaed;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Immich Photos for Gmail</h1>
+  <div class="sub">Connect your self-hosted Immich library so you can attach photos directly from Gmail compose.</div>
+
+  <label for="baseUrl">Immich base URL</label>
+  <input type="text" id="baseUrl" placeholder="https://immich.example.com" autocomplete="off" />
+  <div class="hint">The HTTPS URL of your Immich instance — no trailing slash.</div>
+
+  <label for="apiKey">API key</label>
+  <input type="password" id="apiKey" placeholder="Paste API key from Immich → Account → API Keys" autocomplete="off" />
+  <div class="hint">Stored locally in this browser only. Never sent anywhere except your Immich server.</div>
+
+  <div class="row">
+    <button id="save">Save &amp; Connect</button>
+    <span class="status" id="status"></span>
+  </div>
+
+  <div class="help">
+    <h2>Where do I get an API key?</h2>
+    <ol>
+      <li>Open your Immich web app and sign in.</li>
+      <li>Click your profile avatar → <b>Account Settings</b>.</li>
+      <li>Open the <b>API Keys</b> section → <b>New API Key</b>.</li>
+      <li>Copy the generated key and paste it above.</li>
+    </ol>
+  </div>
+</body>
+<script src="options.js"></script>
+</html>
