@@ -13,32 +13,35 @@ token = jwt.encode(
     secret_key, algorithm="HS256",
 )
 
+# AMO description sanitizer ALLOWS: <a>, <ul>, <ol>, <li>, <strong>, <em>, <br>.
+# It STRIPS: <b> (use <strong>), <code> (no equivalent — falls back to plain).
 description = """\
 A Firefox extension that lets you attach photos from your self-hosted Immich library directly to Gmail emails. No more download-then-re-upload round trip.
 
-<b>How it works</b>
+<strong>How it works</strong>
 An "Immich" button is added to the Gmail compose toolbar (next to the paperclip). Click it and a picker opens with three tabs:
 <ul>
-<li><b>Recent</b> — your timeline, infinite-scrolled.</li>
-<li><b>Search</b> — full-text Immich smart search ("beach 2024", "Alice", "snow").</li>
-<li><b>Albums</b> — browse your existing albums with a live filter.</li>
+<li><strong>Recent</strong> — your timeline, infinite-scrolled.</li>
+<li><strong>Search</strong> — full-text Immich smart search ("beach 2024", "Alice", "snow").</li>
+<li><strong>Albums</strong> — browse your existing albums with a live filter.</li>
 </ul>
+Multi-select photos, click <strong>Attach</strong>, and they appear as real Gmail attachment chips — exactly the same as if you had picked them from disk via the paperclip.
 
-Multi-select photos, click <b>Attach</b>, and they appear as <b>real Gmail attachment chips</b> — exactly the same as if you had picked them from disk via the paperclip.
-
-<b>Optional resize + strip metadata</b>
+<strong>Optional resize + strip metadata</strong>
 A single checkbox in the picker footer downscales the longest side to 1920px and re-encodes as JPEG, dropping EXIF / GPS / camera tags. Useful for smaller and more privacy-friendly attachments.
 
-<b>Privacy</b>
-Your Immich URL and API key are stored locally in <code>browser.storage.local</code> and are only ever sent to your own Immich server. No telemetry, no analytics, no third-party servers. The extension only runs on <code>https://mail.google.com/*</code> and the Immich origin you configure.
+<strong>Privacy</strong>
+Your Immich URL and API key are stored locally in your browser and are only ever sent to your own Immich server. No telemetry, no analytics, no third-party servers. The extension only runs on mail.google.com and the Immich origin you configure.
 
-<b>Setup</b>
-1. In Immich, go to your profile → <b>Account Settings</b> → <b>API Keys</b> → <b>New API Key</b>.
-2. Tick the permissions: <code>asset.read</code>, <code>asset.download</code>, <code>asset.view</code>, <code>album.read</code>, <code>albumAsset.read</code>, <code>search.read</code> (or just select "all").
-3. Open the extension settings, paste your Immich base URL and API key, and click <b>Save &amp; Connect</b>.
-4. Open Gmail, click <b>Compose</b>, and the <b>Immich</b> button appears next to the paperclip.
+<strong>Setup</strong>
+<ol>
+<li>In Immich, go to your profile → Account Settings → API Keys → New API Key.</li>
+<li>Tick these permissions (or just "all"): asset.read, asset.download, asset.view, album.read, albumAsset.read, search.read.</li>
+<li>Open the extension settings, paste your Immich base URL and API key, and click Save &amp; Connect.</li>
+<li>Open Gmail, click Compose, and the Immich button appears next to the paperclip.</li>
+</ol>
 
-<b>Source &amp; bug reports</b>
+<strong>Source &amp; bug reports</strong>
 <a href="https://github.com/richard1912/immich-photos-for-gmail">github.com/richard1912/immich-photos-for-gmail</a> — MIT licensed, free forever.\
 """
 
