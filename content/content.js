@@ -1,4 +1,7 @@
 (() => {
+  // Cross-browser shim: see background.js.
+  globalThis.browser ||= globalThis.chrome;
+
   // Guard against double-injection on extension reload, otherwise duplicate
   // click handlers would fire and produce duplicate attachments.
   if (window.__IMMICH_CONTENT_LOADED__) return;
@@ -134,6 +137,13 @@
     return { buffer: outBuffer, mime: "image/jpeg", filename: newName };
   }
 
+  function base64ToBuffer(b64) {
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes.buffer;
+  }
+
   async function attachAssetsToCompose(compose, assetIds, options) {
     log("attaching", assetIds.length, "asset(s)", "opts:", options);
     const files = [];
@@ -146,7 +156,8 @@
         warn("fetchOriginal failed", id, resp && resp.error);
         continue;
       }
-      let { buffer, mime, filename } = resp.data;
+      let { data, mime, filename } = resp.data;
+      let buffer = base64ToBuffer(data);
       log("fetched", filename, buffer.byteLength, "bytes,", mime);
       const processed = await processImage(buffer, mime, filename, options);
       if (processed) {

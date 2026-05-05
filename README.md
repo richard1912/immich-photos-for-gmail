@@ -7,8 +7,9 @@
 [![Ko-fi](https://img.shields.io/badge/Support-Ko--fi-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/richard1912)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Firefox](https://img.shields.io/badge/Firefox-128%2B-FF7139?logo=firefox-browser&logoColor=white)](https://www.mozilla.org/firefox/)
+[![Chrome](https://img.shields.io/badge/Chrome-MV3-4285F4?logo=google-chrome&logoColor=white)](https://www.google.com/chrome/)
 
-A Firefox extension that lets you attach photos from your self-hosted [Immich](https://immich.app) library directly to Gmail emails. No more download, then re-upload round trip.
+A browser extension that lets you attach photos from your self-hosted [Immich](https://immich.app) library directly to Gmail emails. No more download, then re-upload round trip. Works in **Firefox** and **Chrome / Edge**.
 
 <p align="center">
   <em>Recent, Search, Albums. Pick photos in two clicks. Attached as native Gmail files.</em>
@@ -45,11 +46,22 @@ A Firefox extension that lets you attach photos from your self-hosted [Immich](h
 
 ## Install
 
+### Firefox
+
 > Mozilla AMO listing pending. For now, the extension is distributed as a signed `.xpi` via GitHub Releases.
 
 1. Download the latest `immich-photos-for-gmail-X.Y.Z.xpi` from the [Releases page](https://github.com/richard1912/immich-photos-for-gmail/releases).
 2. Open Firefox → `about:addons`.
 3. Drag the `.xpi` onto the page (or click the gear icon → **Install Add-on From File…**).
+4. Approve the permission prompt for `mail.google.com`.
+
+### Chrome / Edge
+
+> Chrome Web Store listing pending. For now, load as an unpacked extension.
+
+1. Download `immich-photos-for-gmail-X.Y.Z-chrome.zip` from the [Releases page](https://github.com/richard1912/immich-photos-for-gmail/releases) and unzip it (or [build from source](#chrome--edge-build)).
+2. Open `chrome://extensions` (or `edge://extensions`) and enable **Developer mode**.
+3. Click **Load unpacked** and select the unzipped folder.
 4. Approve the permission prompt for `mail.google.com`.
 
 The settings page will open automatically on first install.
@@ -61,7 +73,7 @@ The settings page will open automatically on first install.
 3. In the extension settings tab:
    - **Immich base URL**: e.g. `https://immich.example.com` (no trailing slash).
    - **API key**: paste the key.
-4. Click **Save & Connect**. Firefox will request permission to access your Immich origin; accept it. The extension verifies the credentials by hitting `/api/users/me`.
+4. Click **Save & Connect**. The browser will request permission to access your Immich origin; accept it. The extension verifies the credentials by hitting `/api/users/me`.
 5. Open Gmail → click **Compose** → an **Immich** button appears next to the paperclip.
 
 ## Usage
@@ -92,15 +104,29 @@ To install the unsigned development build, you need [Firefox Developer Edition](
 
 For a signed build that installs in stock Firefox, use [`web-ext sign`](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#sign) with your Mozilla AMO API credentials.
 
+### Chrome / Edge build
+
+```bash
+python scripts/build_chrome.py
+```
+
+This produces `web-ext-artifacts/immich-photos-for-gmail-X.Y.Z-chrome.zip` and an unpacked staging directory at `web-ext-artifacts/chrome/`. To load it:
+
+1. Open `chrome://extensions` (or `edge://extensions`).
+2. Enable **Developer mode**.
+3. Click **Load unpacked** and select `web-ext-artifacts/chrome/`.
+
+The Chrome build uses `manifest.chrome.json` as its source-of-truth manifest. The same `.js` / `.css` / `.html` files are reused — a small `globalThis.browser ||= globalThis.chrome` shim at the top of each script makes them work in both browsers.
+
 ## Compatibility
 
 - **Firefox 128+** (Manifest V3 with `optional_host_permissions` and `world: "MAIN"` content scripts).
+- **Chrome / Edge** via a separate build (see [Building from source](#building-from-source)). The Chrome build uses the same source files with a service-worker manifest and is loaded as an unpacked extension.
 - Tested on the modern Gmail UI (`mail.google.com`).
-- Chrome / Edge: not currently supported. The MV3 service-worker variant would need separate testing.
 
 ## Limitations
 
-- HEIC / HEIF / RAW originals can't be re-encoded by Firefox's `createImageBitmap`. With the resize option on, those files are sent as their original bytes.
+- HEIC / HEIF / RAW originals can't be re-encoded by the browser's `createImageBitmap`. With the resize option on, those files are sent as their original bytes.
 - Gmail's 25MB attachment ceiling still applies. Large originals will be rejected by Gmail (the chip will appear, then disappear with an error). Use the resize option for big photos.
 
 ## Support development

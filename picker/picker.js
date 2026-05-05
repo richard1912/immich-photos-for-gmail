@@ -1,3 +1,6 @@
+// Cross-browser shim: see background.js.
+globalThis.browser ||= globalThis.chrome;
+
 (async () => {
   const { baseUrl, apiKey } = await browser.storage.local.get(["baseUrl", "apiKey"]);
   if (!baseUrl || !apiKey) {
@@ -127,14 +130,21 @@ function initPicker() {
   function showError(msg) { setStatus("error", String(msg)); }
   function clearError() { if (!els.error.hidden) setStatus("none"); }
 
+  function base64ToBytes(b64) {
+    const bin = atob(b64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+
   async function loadThumb(assetId, imgEl) {
     if (state.thumbCache.has(assetId)) {
       imgEl.src = state.thumbCache.get(assetId);
       return;
     }
     try {
-      const { buffer, mime } = await call("fetchThumbnail", { assetId, size: "preview" });
-      const blob = new Blob([buffer], { type: mime || "image/jpeg" });
+      const { data, mime } = await call("fetchThumbnail", { assetId, size: "preview" });
+      const blob = new Blob([base64ToBytes(data)], { type: mime || "image/jpeg" });
       const url = URL.createObjectURL(blob);
       state.thumbCache.set(assetId, url);
       imgEl.src = url;
@@ -329,7 +339,10 @@ function initPicker() {
     setStatus("loading");
     try {
       const albums = await call("listAlbums");
-      console.warn("[immich-picker] albums loaded:", Array.isArray(albums) ? albums.length : albums);
+      // console.log (not warn): Chrome's chrome://extensions error log
+      // captures console.warn output, which made this informational line
+      // show up as a flagged warning.
+      console.log("[immich-picker] albums loaded:", Array.isArray(albums) ? albums.length : albums);
       state.allAlbums = Array.isArray(albums) ? albums : [];
       applyAlbumFilter();
     } catch (e) {

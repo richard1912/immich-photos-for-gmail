@@ -1,3 +1,8 @@
+// Cross-browser shim: Firefox exposes `browser`, Chrome only `chrome`.
+// Modern Chrome (88+) returns Promises from chrome.* APIs, so the rest of
+// the file can use `browser.*` unchanged.
+globalThis.browser ||= globalThis.chrome;
+
 async function getConfig() {
   const { baseUrl, apiKey } = await browser.storage.local.get(["baseUrl", "apiKey"]);
   return {
@@ -65,6 +70,18 @@ async function immichJson(path, { method = "GET", body } = {}) {
   }
 }
 
+// Encode a binary array as base64 in chunks. Direct
+// String.fromCharCode(...new Uint8Array(buf)) blows the JS argument-count
+// limit on multi-MB images.
+function bytesToBase64(bytes) {
+  let bin = "";
+  const CHUNK = 0x8000;
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + CHUNK));
+  }
+  return btoa(bin);
+}
+
 async function immichBytes(path) {
   const { baseUrl, apiKey } = await getConfig();
   if (!baseUrl) throw new Error("Immich URL not configured. Open Settings.");
@@ -80,13 +97,18 @@ async function immichBytes(path) {
     const text = await res.text().catch(() => "");
     throw new Error(explainHttp("GET", url, res.status, text));
   }
-  const buffer = await res.arrayBuffer();
+  // Return base64. Chrome's chrome.runtime.sendMessage JSON-serializes the
+  // payload, which silently drops ArrayBuffer to {}. Firefox uses structured
+  // clone and would preserve the buffer, but encoding unconditionally keeps
+  // a single transport path across browsers. Recipients decode via atob.
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  const data = bytesToBase64(bytes);
   const mime = res.headers.get("Content-Type") || "application/octet-stream";
   const disposition = res.headers.get("Content-Disposition") || "";
   let filename = "";
   const m = /filename\*?=(?:UTF-8'')?["']?([^"';]+)/i.exec(disposition);
   if (m) filename = decodeURIComponent(m[1]);
-  return { buffer, mime, filename };
+  return { data, mime, filename };
 }
 
 const handlers = {
@@ -158,11 +180,15 @@ browser.runtime.onInstalled.addListener(async (details) => {
   }
 });
 
-browser.runtime.onMessage.addListener((msg, sender) => {
+// Use the sendResponse + return true pattern. Chrome MV3 ignores a Promise
+// returned from a listener, so a Firefox-only Promise return would silently
+// drop replies in Chrome. This pattern works in both browsers.
+browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   const fn = handlers[msg && msg.type];
   if (!fn) return false;
-  return Promise.resolve()
+  Promise.resolve()
     .then(() => fn(msg.payload || {}))
-    .then((data) => ({ ok: true, data }))
-    .catch((e) => ({ ok: false, error: String(e.message || e) }));
+    .then((data) => sendResponse({ ok: true, data }))
+    .catch((e) => sendResponse({ ok: false, error: String(e.message || e) }));
+  return true;
 });

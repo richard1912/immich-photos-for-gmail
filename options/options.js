@@ -1,3 +1,6 @@
+// Cross-browser shim: see background.js.
+globalThis.browser ||= globalThis.chrome;
+
 const $ = (id) => document.getElementById(id);
 
 async function load() {

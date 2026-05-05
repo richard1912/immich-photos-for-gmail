@@ -1,6 +1,10 @@
 # Build artifacts
 *.xpi
 *.zip
+web-ext-artifacts/
+
+# AMO signing scratch
+.amo-upload-uuid
 
 # Local-only notes
 PROMO.md
