@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2 (2026-05-05)
+
+### Fixed
+- The Immich button no longer wraps below the Gmail compose toolbar (where it could be clipped by the dialog's bottom edge). The button is now inserted inline, immediately after the paperclip icon, and slimmed to match the surrounding icon row.
+
 ## 0.2.1 (2026-05-05)
 
 ### Added

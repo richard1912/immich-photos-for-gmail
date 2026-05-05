@@ -1,19 +1,21 @@
 .immich-attach-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-left: 8px;
-  padding: 6px 10px;
+  gap: 4px;
+  margin: 0 4px;
+  padding: 0 8px;
   border: 1px solid #dadce0;
-  border-radius: 16px;
+  border-radius: 12px;
   background: #ffffff;
   color: #1a73e8;
   font-family: "Google Sans", Roboto, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  height: 28px;
+  height: 24px;
   line-height: 1;
+  vertical-align: middle;
+  white-space: nowrap;
 }
 
 .immich-attach-btn:hover {
@@ -26,13 +28,14 @@
 }
 
 .immich-attach-icon {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231a73e8'><path d='M12 2L2 7l10 5 10-5-10-5zm0 7.18L4.79 7 12 3.82 19.21 7 12 9.18zM2 12l10 5 10-5-2.04-1.02L12 14.7 4.04 10.98 2 12zm0 5l10 5 10-5-2.04-1.02L12 19.7 4.04 15.98 2 17z'/></svg>");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 .immich-attach-floating {

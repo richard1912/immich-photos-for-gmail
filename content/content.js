@@ -23,9 +23,6 @@
   function injectButton(compose) {
     if (compose.getAttribute(BUTTON_MARK)) return;
 
-    const sendBtn = compose.querySelector('div[role="button"][data-tooltip*="Send"], div[role="button"][aria-label*="Send"]');
-    const iconRow = compose.querySelector(".btC, .aDh, .a8X") || (sendBtn && sendBtn.closest(".btC")) || null;
-
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "immich-attach-btn";
@@ -39,11 +36,22 @@
       openPicker(compose);
     });
 
-    if (iconRow) {
-      iconRow.appendChild(btn);
+    // Prefer placing the button inline with the toolbar icons by inserting
+    // right after the paperclip ("Attach files") button. Falls back to the
+    // outer .btC container, then to a floating absolute-positioned button.
+    const paperclip = compose.querySelector(
+      '[aria-label="Attach files"], [data-tooltip="Attach files"], [command="Files"]'
+    );
+    if (paperclip && paperclip.parentNode) {
+      paperclip.parentNode.insertBefore(btn, paperclip.nextSibling);
     } else {
-      btn.classList.add("immich-attach-floating");
-      compose.appendChild(btn);
+      const iconRow = compose.querySelector(".aDh, .a8X, .btC");
+      if (iconRow) {
+        iconRow.appendChild(btn);
+      } else {
+        btn.classList.add("immich-attach-floating");
+        compose.appendChild(btn);
+      }
     }
 
     compose.setAttribute(BUTTON_MARK, "1");
