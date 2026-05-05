@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.6 (2026-05-05)
+
+### Changed
+- Toolbar button now shows the official Immich five-petal flower logo instead of a generic stacked-photo glyph, so the button reads as "this attaches from Immich" at a glance.
+
 ## 0.2.5 (2026-05-05)
 
 ### Fixed

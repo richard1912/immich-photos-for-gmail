@@ -28,14 +28,11 @@
 }
 
 .immich-attach-icon {
-  width: 12px;
-  height: 12px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231a73e8'><path d='M12 2L2 7l10 5 10-5-10-5zm0 7.18L4.79 7 12 3.82 19.21 7 12 9.18zM2 12l10 5 10-5-2.04-1.02L12 14.7 4.04 10.98 2 12zm0 5l10 5 10-5-2.04-1.02L12 19.7 4.04 15.98 2 17z'/></svg>");
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
+  width: 14px;
+  height: 14px;
   display: inline-block;
   flex-shrink: 0;
+  vertical-align: middle;
 }
 
 .immich-attach-floating {
