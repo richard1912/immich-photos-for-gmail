@@ -90,6 +90,7 @@ function initPicker() {
     els.toolbar.hidden = tab !== "search";
     els.albumList.hidden = tab !== "albums";
     els.grid.innerHTML = "";
+    setStatus("none");
     removeAlbumBack();
     if (tab === "albums") {
       showAlbums();
@@ -98,14 +99,16 @@ function initPicker() {
     }
   }
 
-  function showError(msg) {
-    els.error.textContent = msg;
-    els.error.hidden = false;
+  // Mutex helper: only one of loading / empty / error can be visible.
+  function setStatus(kind, message) {
+    els.loading.hidden = kind !== "loading";
+    els.empty.hidden = kind !== "empty";
+    els.error.hidden = kind !== "error";
+    if (kind === "error") els.error.textContent = message || "Something went wrong";
+    else if (kind !== "error") els.error.textContent = "";
   }
-  function clearError() {
-    els.error.hidden = true;
-    els.error.textContent = "";
-  }
+  function showError(msg) { setStatus("error", String(msg)); }
+  function clearError() { if (!els.error.hidden) setStatus("none"); }
 
   async function loadThumb(assetId, imgEl) {
     if (state.thumbCache.has(assetId)) {
@@ -183,34 +186,33 @@ function initPicker() {
   async function loadMore() {
     if (state.loading || state.done) return;
     state.loading = true;
-    els.loading.hidden = false;
-    clearError();
+    setStatus("loading");
     try {
       let data;
       if (state.tab === "recent") {
         data = await call("listRecent", { page: state.page, size: state.pageSize });
       } else if (state.tab === "search") {
-        if (!state.query) { state.loading = false; els.loading.hidden = true; return; }
+        if (!state.query) { state.loading = false; setStatus("none"); return; }
         data = await call("searchSmart", { query: state.query, page: state.page, size: state.pageSize });
       } else if (state.tab === "albums" && state.albumId) {
         data = await call("listAlbumAssets", { albumId: state.albumId });
         const assets = (data && data.assets) || [];
         renderAssets(assets);
         state.done = true;
-        els.empty.hidden = assets.length > 0;
+        setStatus(assets.length === 0 ? "empty" : "none");
         state.loading = false;
-        els.loading.hidden = true;
         return;
       } else {
         state.loading = false;
-        els.loading.hidden = true;
+        setStatus("none");
         return;
       }
 
       const items = (data && data.assets && data.assets.items) || [];
       const nextPage = data && data.assets && data.assets.nextPage;
       renderAssets(items);
-      if (items.length === 0 && state.page === 1) els.empty.hidden = false;
+      if (items.length === 0 && state.page === 1) setStatus("empty");
+      else setStatus("none");
       if (!nextPage || items.length < state.pageSize) state.done = true;
       else state.page = parseInt(nextPage, 10) || state.page + 1;
     } catch (e) {
@@ -218,7 +220,6 @@ function initPicker() {
       state.done = true;
     } finally {
       state.loading = false;
-      els.loading.hidden = true;
     }
   }
 
@@ -234,15 +235,11 @@ function initPicker() {
 
   async function showAlbums() {
     els.albumList.innerHTML = "";
-    els.empty.hidden = true;
-    els.loading.hidden = false;
-    clearError();
+    setStatus("loading");
     try {
       const albums = await call("listAlbums");
       console.warn("[immich-picker] albums loaded:", Array.isArray(albums) ? albums.length : albums);
-      if (!albums || albums.length === 0) {
-        els.empty.hidden = false;
-      }
+      setStatus(!albums || albums.length === 0 ? "empty" : "none");
       for (const a of albums || []) {
         const card = document.createElement("div");
         card.className = "album-card";
@@ -270,8 +267,6 @@ function initPicker() {
       }
     } catch (e) {
       showError(String(e.message || e));
-    } finally {
-      els.loading.hidden = true;
     }
   }
 
@@ -286,7 +281,7 @@ function initPicker() {
     state.done = false;
     els.albumList.hidden = true;
     els.grid.innerHTML = "";
-    els.empty.hidden = true;
+    setStatus("none");
     removeAlbumBack();
     const back = document.createElement("button");
     back.className = "album-back";
@@ -314,7 +309,7 @@ function initPicker() {
     state.page = 1;
     state.done = false;
     els.grid.innerHTML = "";
-    els.empty.hidden = true;
+    setStatus("none");
     if (state.query) loadMore();
   }
 

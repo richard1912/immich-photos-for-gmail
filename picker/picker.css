@@ -105,14 +105,17 @@ body {
   display: block;
 }
 .album-card .meta {
-  padding: 8px 10px;
-  font-size: 13px;
+  padding: 10px 12px 12px;
 }
 .album-card .meta .name {
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  color: #202124;
+  line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-bottom: 2px;
 }
 .album-card .meta .count { color: #5f6368; font-size: 12px; }
 
@@ -166,16 +169,31 @@ body {
   color: #fff;
 }
 
-.empty, .loading, .error {
+.status {
   position: absolute;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #5f6368;
+  gap: 12px;
+  color: #80868b;
   pointer-events: none;
 }
-.error { color: #c5221f; padding: 20px; text-align: center; }
+.status[hidden] { display: none; }
+.status .status-text { font-size: 14px; font-weight: 500; letter-spacing: 0.1px; }
+.status.error { color: #c5221f; padding: 20px; text-align: center; }
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(26, 115, 232, 0.18);
+  border-top-color: #1a73e8;
+  border-radius: 50%;
+  animation: immich-spin 0.9s linear infinite;
+}
+@keyframes immich-spin {
+  to { transform: rotate(360deg); }
+}
 
 .sentinel { height: 1px; }
 

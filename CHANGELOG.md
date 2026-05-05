@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.5 (2026-05-05)
+
+### Fixed
+- "No photos found." and "Loading…" could overlap because tab switches did not reset the empty/error overlays before showing the loading overlay. They are now driven by a single mutex helper so only one status message is ever visible at a time.
+
+### Changed
+- Loading state now shows a small blue spinner instead of plain "Loading…" text.
+- Empty state now shows a subtle photo-frame icon above the "No photos found" label.
+- Album-card name is larger (14px) and bolder (600), in solid `#202124`, so the album title is the most prominent thing on each card.
+
 ## 0.2.4 (2026-05-05)
 
 ### Fixed
