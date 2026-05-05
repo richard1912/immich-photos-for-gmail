@@ -254,12 +254,17 @@ function initPicker() {
   // Compute square card size that fully fills the album grid's available
   // width, given a min target width. Driven in JS because CSS aspect-ratio
   // + 1fr kept producing non-square / overlapping rows in this layout.
+  // Falls back to document.body width if the album list itself does not
+  // have a laid-out clientWidth yet (e.g. fired before the first reflow
+  // after un-hiding the section).
   function fitAlbumGrid() {
     const list = els.albumList;
-    if (!list || list.hidden) return;
-    const w = list.clientWidth;
-    if (!w) return;
-    const padding = 28; // matches CSS padding 14px on left + right
+    if (!list) return;
+    let w = list.clientWidth;
+    if (!w) w = document.body.clientWidth;
+    if (!w) w = window.innerWidth || 0;
+    if (w < 100) return;
+    const padding = 28; // CSS padding 14px on left + right
     const gap = 12;
     const minCard = 180;
     const inner = w - padding;
@@ -268,12 +273,10 @@ function initPicker() {
     list.style.setProperty("--card-size", cardSize + "px");
   }
   window.addEventListener("resize", fitAlbumGrid);
-  // ResizeObserver catches the moment the album-list flips from
-  // display:none to a real laid-out width, which a single synchronous
-  // clientWidth read inside showAlbums() can miss.
   if (typeof ResizeObserver !== "undefined") {
     const ro = new ResizeObserver(() => fitAlbumGrid());
     ro.observe(els.albumList);
+    ro.observe(document.body);
   }
 
   function renderAlbumCard(a) {
@@ -309,7 +312,6 @@ function initPicker() {
 
   function renderAlbumList(albums) {
     els.albumList.innerHTML = "";
-    fitAlbumGrid();
     if (!albums || albums.length === 0) {
       setStatus("empty");
       return;
@@ -318,6 +320,11 @@ function initPicker() {
     const frag = document.createDocumentFragment();
     for (const a of albums) frag.appendChild(renderAlbumCard(a));
     els.albumList.appendChild(frag);
+    // Recompute card size now that the list has cards (and therefore a
+    // possibly-different layout / scrollbar). RAF defers the read until
+    // after the browser has finished the current style+layout pass.
+    fitAlbumGrid();
+    requestAnimationFrame(fitAlbumGrid);
   }
 
   function applyAlbumFilter() {

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.13 (2026-05-05)
+
+### Changed
+- Album-filter input now matches the Search-tab styling: same flex-row container, same pill-shaped input (flex: 1 / 20px radius / 1a73e8 focus border).
+
+### Fixed
+- Album-card sizing more aggressively recomputes: `fitAlbumGrid` now falls back to `document.body.clientWidth` when the album list itself reports zero clientWidth, observes both the album list and the body for size changes, runs after every list render, and runs again on the next animation frame to catch reflows that happen between style and paint.
+
 ## 0.2.12 (2026-05-05)
 
 ### Added
