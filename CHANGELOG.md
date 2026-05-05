@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.19 (2026-05-06)
+
+### Changed
+- Bumped `strict_min_version` again from `140.0` to `142.0`. AMO flagged that `data_collection_permissions` was only honoured by Firefox for Android 142+ (one release later than desktop's 140). The 142 floor satisfies both desktop and Android.
+
 ## 0.2.18 (2026-05-06)
 
 ### Changed
