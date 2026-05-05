@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Immich Photos for Gmail",
   "short_name": "Immich for Gmail",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "Attach photos from your self-hosted Immich library directly into Gmail compose windows.",
   "homepage_url": "https://github.com/richard1912/immich-photos-for-gmail",
   "browser_specific_settings": {

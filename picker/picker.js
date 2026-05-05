@@ -251,33 +251,19 @@ function initPicker() {
   );
   scrollObs.observe(els.sentinel);
 
-  // Compute square card size that fully fills the album grid's available
-  // width, given a min target width. Driven in JS because CSS aspect-ratio
-  // + 1fr kept producing non-square / overlapping rows in this layout.
-  // Falls back to document.body width if the album list itself does not
-  // have a laid-out clientWidth yet (e.g. fired before the first reflow
-  // after un-hiding the section).
-  function fitAlbumGrid() {
-    const list = els.albumList;
-    if (!list) return;
-    let w = list.clientWidth;
-    if (!w) w = document.body.clientWidth;
-    if (!w) w = window.innerWidth || 0;
-    if (w < 100) return;
-    const padding = 28; // CSS padding 14px on left + right
-    const gap = 12;
-    const minCard = 180;
-    const inner = w - padding;
-    const cols = Math.max(1, Math.floor((inner + gap) / (minCard + gap)));
-    const cardSize = Math.floor((inner - (cols - 1) * gap) / cols);
-    list.style.setProperty("--card-size", cardSize + "px");
-  }
-  window.addEventListener("resize", fitAlbumGrid);
-  if (typeof ResizeObserver !== "undefined") {
-    const ro = new ResizeObserver(() => fitAlbumGrid());
-    ro.observe(els.albumList);
-    ro.observe(document.body);
-  }
+  // Per-card ResizeObserver: whenever a card's rendered width changes
+  // (initial layout, window resize, scrollbar appearing, etc.), force
+  // its height to match its width so the card stays square. This bypasses
+  // any aspect-ratio / padding-bottom interaction with grid sizing that
+  // earlier attempts kept getting wrong.
+  const cardRO = (typeof ResizeObserver !== "undefined")
+    ? new ResizeObserver((entries) => {
+        for (const e of entries) {
+          const w = e.contentRect && e.contentRect.width;
+          if (w && w > 0) e.target.style.height = w + "px";
+        }
+      })
+    : null;
 
   function renderAlbumCard(a) {
     const card = document.createElement("div");
@@ -307,6 +293,7 @@ function initPicker() {
       loadThumb(a.albumThumbnailAssetId, coverImg);
     }
     card.addEventListener("click", () => openAlbum(a.id, a.albumName));
+    if (cardRO) cardRO.observe(card);
     return card;
   }
 
@@ -320,11 +307,6 @@ function initPicker() {
     const frag = document.createDocumentFragment();
     for (const a of albums) frag.appendChild(renderAlbumCard(a));
     els.albumList.appendChild(frag);
-    // Recompute card size now that the list has cards (and therefore a
-    // possibly-different layout / scrollbar). RAF defers the read until
-    // after the browser has finished the current style+layout pass.
-    fitAlbumGrid();
-    requestAnimationFrame(fitAlbumGrid);
   }
 
   function applyAlbumFilter() {

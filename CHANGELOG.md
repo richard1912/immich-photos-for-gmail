@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.14 (2026-05-05)
+
+### Fixed
+- Album cards now stretch to fill the album list width with no wasted gutter on the right. The grid uses `repeat(auto-fill, minmax(180px, 1fr))` so columns always consume the available width, and a per-card `ResizeObserver` sets each card's height to match its rendered width so the cards stay square no matter how the columns size out. This replaces three earlier attempts (predicted-pixel grid, intrinsic-ratio square, JS-computed `--card-size`) that all left edge cases.
+
 ## 0.2.13 (2026-05-05)
 
 ### Changed

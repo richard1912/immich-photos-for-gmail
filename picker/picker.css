@@ -91,26 +91,23 @@ body {
 }
 #album-filter:focus { border-color: #1a73e8; }
 
-/* Card size is computed in JS (fitAlbumGrid) and exposed as --card-size,
-   so cards stretch to fully fill the available width while staying square.
-   Earlier purely-CSS attempts with 1fr + aspect-ratio kept producing
-   non-square / overlapping rows, so we now drive the math in JS. */
+/* Cards stretch to fill the row via 1fr columns. Because previous purely
+   CSS attempts (aspect-ratio, padding-bottom) were unreliable in this
+   layout, each card's height is set in JS via a per-card ResizeObserver
+   so it always matches its rendered width. The CSS fallback height
+   (200px) is just there in case ResizeObserver does not fire. */
 .album-list {
-  --card-size: 200px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, var(--card-size));
-  grid-auto-rows: var(--card-size);
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 12px;
   padding: 14px;
   overflow: auto;
-  justify-content: start;
   align-content: start;
 }
 .album-list[hidden] { display: none; }
 .album-card {
   position: relative;
-  width: var(--card-size);
-  height: var(--card-size);
+  height: 200px;
   cursor: pointer;
   border-radius: 8px;
   overflow: hidden;
