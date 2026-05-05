@@ -6,51 +6,66 @@
   <style>
     body {
       font-family: "Google Sans", Roboto, Arial, sans-serif;
-      padding: 24px;
-      max-width: 560px;
+      padding: 14px 16px;
+      width: 380px;
+      max-width: 100%;
       color: #202124;
-      line-height: 1.5;
+      line-height: 1.4;
+      margin: 0;
     }
-    h1 { font-size: 20px; margin: 0 0 4px; }
-    .sub { color: #5f6368; font-size: 13px; margin-bottom: 20px; }
-    label { display: block; font-size: 13px; font-weight: 500; margin: 16px 0 4px; }
+    h1 { font-size: 17px; margin: 0 0 2px; }
+    .sub { color: #5f6368; font-size: 12px; margin-bottom: 12px; }
+    label { display: block; font-size: 13px; font-weight: 500; margin: 10px 0 4px; }
     input[type="text"], input[type="password"] {
       width: 100%;
-      padding: 10px 12px;
+      padding: 8px 10px;
       border: 1px solid #dadce0;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 13px;
       box-sizing: border-box;
       font-family: inherit;
     }
     input:focus { border-color: #1a73e8; outline: none; }
-    .row { display: flex; gap: 10px; margin-top: 20px; align-items: center; flex-wrap: wrap; }
+    .row { display: flex; gap: 10px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
     button {
-      padding: 10px 20px;
+      padding: 8px 16px;
       border: 0;
       background: #1a73e8;
       color: #fff;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 500;
-      font-size: 14px;
+      font-size: 13px;
     }
     button:hover { background: #1765cc; }
-    .status { font-size: 13px; }
+    .status { font-size: 12px; }
     .status.ok { color: #1e8e3e; }
     .status.err { color: #c5221f; }
-    .hint { font-size: 12px; color: #5f6368; margin-top: 6px; }
+    .hint { font-size: 11px; color: #5f6368; margin-top: 4px; }
     .help {
-      margin-top: 28px;
-      padding: 14px 16px;
+      margin-top: 14px;
+      padding: 10px 12px;
       background: #f8f9fa;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 12px;
       color: #3c4043;
     }
-    .help h2 { font-size: 14px; margin: 0 0 8px; }
-    .help ol { margin: 0; padding-left: 20px; }
-    .help li { margin-bottom: 4px; }
+    .help > summary {
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      list-style: none;
+      color: #1a73e8;
+    }
+    .help > summary::-webkit-details-marker { display: none; }
+    .help > summary::before {
+      content: "▸ ";
+      display: inline-block;
+      transition: transform 0.15s;
+    }
+    .help[open] > summary::before { content: "▾ "; }
+    .help ol { margin: 8px 0 0; padding-left: 20px; }
+    .help li { margin-bottom: 2px; }
     code {
       background: #e8eaed;
       padding: 1px 6px;
@@ -58,13 +73,13 @@
       font-size: 12px;
     }
     .footer-links {
-      margin-top: 28px;
-      padding-top: 16px;
+      margin-top: 14px;
+      padding-top: 10px;
       border-top: 1px solid #e8eaed;
       display: flex;
-      gap: 18px;
+      gap: 14px;
       align-items: center;
-      font-size: 12px;
+      font-size: 11px;
       color: #5f6368;
     }
     .footer-links a {
@@ -75,13 +90,13 @@
     .kofi-btn {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
+      gap: 5px;
+      padding: 4px 10px;
       background: #FF5E5B;
       color: #fff !important;
-      border-radius: 18px;
+      border-radius: 16px;
       font-weight: 500;
-      font-size: 12px;
+      font-size: 11px;
     }
     .kofi-btn:hover { background: #e0524f; color: #fff !important; }
     .footer-links .spacer { flex: 1; }
@@ -104,15 +119,15 @@
     <span class="status" id="status"></span>
   </div>
 
-  <div class="help">
-    <h2>Where do I get an API key?</h2>
+  <details class="help">
+    <summary>Where do I get an API key?</summary>
     <ol>
       <li>Open your Immich web app and sign in.</li>
       <li>Click your profile avatar, then <b>Account Settings</b>.</li>
       <li>Open the <b>API Keys</b> section, then <b>New API Key</b>.</li>
       <li>Copy the generated key and paste it above.</li>
     </ol>
-  </div>
+  </details>
 
   <div class="footer-links">
     <a href="https://github.com/richard1912/immich-photos-for-gmail" target="_blank" rel="noopener">GitHub</a>
