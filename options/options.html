@@ -100,10 +100,16 @@
     }
     .kofi-btn:hover { background: #e0524f; color: #fff !important; }
     .footer-links .spacer { flex: 1; }
+    .header { display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+    .header img { width: 28px; height: 28px; flex: 0 0 auto; }
+    .header h1 { margin: 0; }
   </style>
 </head>
 <body>
-  <h1>Immich Photos for Gmail</h1>
+  <div class="header">
+    <img src="../icons/immich-logo.svg" alt="" />
+    <h1>Immich Photos for Gmail</h1>
+  </div>
   <div class="sub">Connect your self-hosted Immich library so you can attach photos directly from Gmail compose.</div>
 
   <label for="baseUrl">Immich base URL</label>
