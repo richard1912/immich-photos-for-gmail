@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.9 (2026-05-05)
+
+### Fixed
+- Album cards overlapped each other: rows touched with no gap and the bottom of one row's cards rendered behind the top of the next row's. The 0.2.7 layout used `aspect-ratio: 1/1` on the card with only absolutely-positioned children, so the grid had no real content height to size against. Switched the cover back to a flow-content block sized by `padding-bottom: 100%` so each card has a real intrinsic square height; the grid track sizes correctly and the 12px gap shows up again.
+
 ## 0.2.8 (2026-05-05)
 
 ### Changed

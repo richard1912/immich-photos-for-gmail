@@ -87,15 +87,20 @@ body {
   border-radius: 8px;
   overflow: hidden;
   background: #ddd;
-  aspect-ratio: 1 / 1;
-  min-height: 180px;
 }
 .album-card:hover { box-shadow: 0 0 0 2px #1a73e8; }
+/* The cover is the actual flow content of the card. padding-bottom: 100%
+   makes its height equal to its width, so the card itself is intrinsically
+   a square in the grid track without relying on aspect-ratio. */
 .album-card .cover {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  background: #ddd;
 }
 .album-card .cover img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
