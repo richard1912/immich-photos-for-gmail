@@ -38,6 +38,8 @@ function initPicker() {
     done: false,
     selected: new Map(),
     thumbCache: new Map(),
+    allAlbums: null,
+    albumFilter: "",
   };
 
   const els = {
@@ -48,6 +50,8 @@ function initPicker() {
     toolbar: document.getElementById("toolbar"),
     searchInput: document.getElementById("search-input"),
     searchBtn: document.getElementById("search-btn"),
+    albumSearch: document.getElementById("album-search"),
+    albumFilter: document.getElementById("album-filter"),
     albumList: document.getElementById("album-list"),
     count: document.getElementById("count"),
     attach: document.getElementById("attach"),
@@ -88,6 +92,7 @@ function initPicker() {
       t.classList.toggle("active", t.dataset.tab === tab);
     }
     els.toolbar.hidden = tab !== "search";
+    els.albumSearch.hidden = tab !== "albums";
     els.albumList.hidden = tab !== "albums";
     els.grid.innerHTML = "";
     setStatus("none");
@@ -247,8 +252,8 @@ function initPicker() {
   scrollObs.observe(els.sentinel);
 
   // Compute square card size that fully fills the album grid's available
-   // width, given a min target width. Driven in JS because CSS aspect-ratio
-   // + 1fr kept producing non-square / overlapping rows in this layout.
+  // width, given a min target width. Driven in JS because CSS aspect-ratio
+  // + 1fr kept producing non-square / overlapping rows in this layout.
   function fitAlbumGrid() {
     const list = els.albumList;
     if (!list || list.hidden) return;
@@ -263,46 +268,81 @@ function initPicker() {
     list.style.setProperty("--card-size", cardSize + "px");
   }
   window.addEventListener("resize", fitAlbumGrid);
+  // ResizeObserver catches the moment the album-list flips from
+  // display:none to a real laid-out width, which a single synchronous
+  // clientWidth read inside showAlbums() can miss.
+  if (typeof ResizeObserver !== "undefined") {
+    const ro = new ResizeObserver(() => fitAlbumGrid());
+    ro.observe(els.albumList);
+  }
 
-  async function showAlbums() {
+  function renderAlbumCard(a) {
+    const card = document.createElement("div");
+    card.className = "album-card";
+    card.title = a.albumName || "(untitled)";
+
+    const cover = document.createElement("div");
+    cover.className = "cover";
+    const coverImg = document.createElement("img");
+    coverImg.alt = "";
+    cover.appendChild(coverImg);
+    card.appendChild(cover);
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    const nameEl = document.createElement("div");
+    nameEl.className = "name";
+    nameEl.textContent = a.albumName || "(untitled)";
+    const countEl = document.createElement("div");
+    countEl.className = "count";
+    countEl.textContent = `${a.assetCount || 0} items`;
+    meta.appendChild(nameEl);
+    meta.appendChild(countEl);
+    card.appendChild(meta);
+
+    if (a.albumThumbnailAssetId) {
+      loadThumb(a.albumThumbnailAssetId, coverImg);
+    }
+    card.addEventListener("click", () => openAlbum(a.id, a.albumName));
+    return card;
+  }
+
+  function renderAlbumList(albums) {
     els.albumList.innerHTML = "";
     fitAlbumGrid();
+    if (!albums || albums.length === 0) {
+      setStatus("empty");
+      return;
+    }
+    setStatus("none");
+    const frag = document.createDocumentFragment();
+    for (const a of albums) frag.appendChild(renderAlbumCard(a));
+    els.albumList.appendChild(frag);
+  }
+
+  function applyAlbumFilter() {
+    const all = state.allAlbums || [];
+    const q = state.albumFilter.trim().toLowerCase();
+    if (!q) {
+      renderAlbumList(all);
+      return;
+    }
+    const filtered = all.filter((a) => (a.albumName || "").toLowerCase().includes(q));
+    renderAlbumList(filtered);
+  }
+
+  els.albumFilter.addEventListener("input", () => {
+    state.albumFilter = els.albumFilter.value;
+    applyAlbumFilter();
+  });
+
+  async function showAlbums() {
     setStatus("loading");
     try {
       const albums = await call("listAlbums");
       console.warn("[immich-picker] albums loaded:", Array.isArray(albums) ? albums.length : albums);
-      setStatus(!albums || albums.length === 0 ? "empty" : "none");
-      for (const a of albums || []) {
-        const card = document.createElement("div");
-        card.className = "album-card";
-        card.title = a.albumName || "(untitled)";
-
-        const cover = document.createElement("div");
-        cover.className = "cover";
-        const coverImg = document.createElement("img");
-        coverImg.alt = "";
-        cover.appendChild(coverImg);
-        card.appendChild(cover);
-
-        const meta = document.createElement("div");
-        meta.className = "meta";
-        const nameEl = document.createElement("div");
-        nameEl.className = "name";
-        nameEl.textContent = a.albumName || "(untitled)";
-        const countEl = document.createElement("div");
-        countEl.className = "count";
-        countEl.textContent = `${a.assetCount || 0} items`;
-        meta.appendChild(nameEl);
-        meta.appendChild(countEl);
-        card.appendChild(meta);
-
-        if (a.albumThumbnailAssetId) {
-          loadThumb(a.albumThumbnailAssetId, coverImg);
-        }
-
-        card.addEventListener("click", () => openAlbum(a.id, a.albumName));
-        els.albumList.appendChild(card);
-      }
+      state.allAlbums = Array.isArray(albums) ? albums : [];
+      applyAlbumFilter();
     } catch (e) {
       showError(String(e.message || e));
     }
@@ -317,6 +357,7 @@ function initPicker() {
     state.albumId = id;
     state.page = 1;
     state.done = false;
+    els.albumSearch.hidden = true;
     els.albumList.hidden = true;
     els.grid.innerHTML = "";
     setStatus("none");
@@ -327,6 +368,7 @@ function initPicker() {
     back.addEventListener("click", () => {
       state.albumId = null;
       removeAlbumBack();
+      els.albumSearch.hidden = false;
       els.albumList.hidden = false;
       els.grid.innerHTML = "";
       state.done = false;

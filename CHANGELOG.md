@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.12 (2026-05-05)
+
+### Added
+- Live album filter on the Albums tab: a "Filter albums…" input above the grid that filters cards by name as you type, fully client-side. The album list is fetched once and stored in state, so filtering is instant even with hundreds of albums.
+
+### Fixed
+- Card sizing now uses a `ResizeObserver` on the album list, so the grid recomputes when the iframe finally has a real laid-out width. The 0.2.11 single-shot `clientWidth` read could fire too early and leave the layout at the default 200px columns, leaving a wasted gutter on the right.
+
 ## 0.2.11 (2026-05-05)
 
 ### Changed

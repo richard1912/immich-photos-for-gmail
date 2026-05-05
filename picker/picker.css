@@ -73,6 +73,23 @@ body {
   font-weight: 500;
 }
 
+.album-search {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.album-search[hidden] { display: none; }
+#album-filter {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #dadce0;
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+#album-filter:focus { border-color: #1a73e8; }
+
 /* Card size is computed in JS (fitAlbumGrid) and exposed as --card-size,
    so cards stretch to fully fill the available width while staying square.
    Earlier purely-CSS attempts with 1fr + aspect-ratio kept producing
