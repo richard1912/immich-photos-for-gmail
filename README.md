@@ -113,8 +113,6 @@ This extension is free and open source. If it saves you time, you can buy me a c
   </a>
 </p>
 
-Or click the **Sponsor** button at the top of this repo. Every coffee helps me prioritize bugs, ship features, and keep this thing alive.
-
 ## License
 
 MIT. See [LICENSE](LICENSE).

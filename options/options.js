@@ -19,6 +19,21 @@ function readForm() {
   };
 }
 
+// Auto-save fields as the user types so credentials aren't lost if the
+// options page is closed without clicking Save & Connect. Debounced to avoid
+// thrashing storage on every keystroke. Site permission is still only
+// requested on Save & Connect.
+let saveTimer = null;
+function scheduleAutoSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    const { baseUrl, apiKey } = readForm();
+    await browser.storage.local.set({ baseUrl, apiKey });
+  }, 300);
+}
+$("baseUrl").addEventListener("input", scheduleAutoSave);
+$("apiKey").addEventListener("input", scheduleAutoSave);
+
 function originPattern(baseUrl) {
   try {
     return new URL(baseUrl).origin + "/*";
