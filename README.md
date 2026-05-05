@@ -22,6 +22,12 @@ A Firefox extension that lets you attach photos from your self-hosted [Immich](h
   <em>The Immich button slots in next to the standard Gmail toolbar.</em>
 </p>
 
+<p align="center">
+  <img src="assets/upload-screen.jpg" alt="The Immich picker showing the Recent tab with a thumbnail grid" width="780" />
+  <br />
+  <em>The picker. Recent, Search, Albums tabs. Multi-select. Optional resize and strip-metadata toggle in the footer.</em>
+</p>
+
 - **Adds an "Immich" button** to the Gmail compose toolbar.
 - **Picker overlay** with three tabs:
   - **Recent**: your timeline, infinite-scrolled.
