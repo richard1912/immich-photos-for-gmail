@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.17 (2026-05-06)
+
+### Changed
+- Declare `data_collection_permissions: { required: ["none"] }` in `browser_specific_settings.gecko` to satisfy Mozilla's new (required-for-future-versions) data-consent disclosure. The extension does not collect any user data — credentials stay in `browser.storage.local`, and photos only flow between the user's own Immich server and Gmail compose.
+
 ## 0.2.16 (2026-05-06)
 
 ### Added
