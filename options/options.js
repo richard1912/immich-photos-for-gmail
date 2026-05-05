@@ -20,19 +20,34 @@ function readForm() {
 }
 
 // Auto-save fields as the user types so credentials aren't lost if the
-// options page is closed without clicking Save & Connect. Debounced to avoid
-// thrashing storage on every keystroke. Site permission is still only
-// requested on Save & Connect.
+// options page is closed without clicking Save & Connect. Site permission
+// is still only requested on Save & Connect.
+//
+// When this page renders inside the toolbar action's popup, the popup is
+// destroyed the moment the user clicks outside it — any pending debounced
+// timer dies with it, so we also flush on `blur` and `pagehide` to make
+// sure the last edit lands and to drain in-flight writes before the popup
+// is torn down (which was making the next icon click feel laggy/dead).
 let saveTimer = null;
+function flushAutoSave() {
+  if (saveTimer) {
+    clearTimeout(saveTimer);
+    saveTimer = null;
+  }
+  const { baseUrl, apiKey } = readForm();
+  return browser.storage.local.set({ baseUrl, apiKey });
+}
 function scheduleAutoSave() {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(async () => {
-    const { baseUrl, apiKey } = readForm();
-    await browser.storage.local.set({ baseUrl, apiKey });
-  }, 300);
+  saveTimer = setTimeout(flushAutoSave, 300);
 }
-$("baseUrl").addEventListener("input", scheduleAutoSave);
-$("apiKey").addEventListener("input", scheduleAutoSave);
+for (const id of ["baseUrl", "apiKey"]) {
+  $(id).addEventListener("input", scheduleAutoSave);
+  $(id).addEventListener("blur", flushAutoSave);
+}
+// pagehide fires when the popup is being torn down. Fire-and-forget — we
+// can't await here, but Firefox queues the storage write before unload.
+window.addEventListener("pagehide", flushAutoSave);
 
 function originPattern(baseUrl) {
   try {
