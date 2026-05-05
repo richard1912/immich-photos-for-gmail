@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.11 (2026-05-05)
+
+### Changed
+- Album cards now stretch to fully fill the picker width while staying square. The 0.2.10 fixed-200px grid worked but left a wasted gutter on the right at wider sizes; the card size is now computed in JS (`fitAlbumGrid`) based on the available width and a 180px minimum, exposed as `--card-size`, and recomputed on window resize.
+- Added a discreet coffee-cup icon in the picker footer next to the version label that links to Ko-fi. Stays grey by default, turns Ko-fi red on hover.
+
 ## 0.2.10 (2026-05-05)
 
 ### Fixed

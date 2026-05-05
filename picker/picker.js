@@ -246,8 +246,27 @@ function initPicker() {
   );
   scrollObs.observe(els.sentinel);
 
+  // Compute square card size that fully fills the album grid's available
+   // width, given a min target width. Driven in JS because CSS aspect-ratio
+   // + 1fr kept producing non-square / overlapping rows in this layout.
+  function fitAlbumGrid() {
+    const list = els.albumList;
+    if (!list || list.hidden) return;
+    const w = list.clientWidth;
+    if (!w) return;
+    const padding = 28; // matches CSS padding 14px on left + right
+    const gap = 12;
+    const minCard = 180;
+    const inner = w - padding;
+    const cols = Math.max(1, Math.floor((inner + gap) / (minCard + gap)));
+    const cardSize = Math.floor((inner - (cols - 1) * gap) / cols);
+    list.style.setProperty("--card-size", cardSize + "px");
+  }
+  window.addEventListener("resize", fitAlbumGrid);
+
   async function showAlbums() {
     els.albumList.innerHTML = "";
+    fitAlbumGrid();
     setStatus("loading");
     try {
       const albums = await call("listAlbums");

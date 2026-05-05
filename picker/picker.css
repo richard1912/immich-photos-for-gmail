@@ -73,14 +73,15 @@ body {
   font-weight: 500;
 }
 
-/* Fixed-pixel grid: each card is a hard 200x200 box. We size both columns
-   and rows explicitly so the layout is deterministic. Earlier attempts
-   with 1fr columns + intrinsic-ratio sizing kept producing tall cards
-   that overlapped the next row. */
+/* Card size is computed in JS (fitAlbumGrid) and exposed as --card-size,
+   so cards stretch to fully fill the available width while staying square.
+   Earlier purely-CSS attempts with 1fr + aspect-ratio kept producing
+   non-square / overlapping rows, so we now drive the math in JS. */
 .album-list {
+  --card-size: 200px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 200px);
-  grid-auto-rows: 200px;
+  grid-template-columns: repeat(auto-fill, var(--card-size));
+  grid-auto-rows: var(--card-size);
   gap: 12px;
   padding: 14px;
   overflow: auto;
@@ -90,8 +91,8 @@ body {
 .album-list[hidden] { display: none; }
 .album-card {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: var(--card-size);
+  height: var(--card-size);
   cursor: pointer;
   border-radius: 8px;
   overflow: hidden;
@@ -248,6 +249,16 @@ body {
 .spacer { flex: 1; }
 .count { color: #5f6368; font-size: 13px; }
 .version { color: #9aa0a6; font-size: 11px; font-variant-numeric: tabular-nums; }
+.kofi-link {
+  color: #9aa0a6;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.15s ease;
+  text-decoration: none;
+}
+.kofi-link:hover { color: #FF5E5B; }
 .opt {
   display: inline-flex;
   align-items: center;
