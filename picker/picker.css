@@ -73,34 +73,36 @@ body {
   font-weight: 500;
 }
 
+/* Fixed-pixel grid: each card is a hard 200x200 box. We size both columns
+   and rows explicitly so the layout is deterministic. Earlier attempts
+   with 1fr columns + intrinsic-ratio sizing kept producing tall cards
+   that overlapped the next row. */
 .album-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, 200px);
+  grid-auto-rows: 200px;
   gap: 12px;
   padding: 14px;
   overflow: auto;
+  justify-content: start;
+  align-content: start;
 }
 .album-list[hidden] { display: none; }
 .album-card {
   position: relative;
+  width: 200px;
+  height: 200px;
   cursor: pointer;
   border-radius: 8px;
   overflow: hidden;
   background: #ddd;
 }
 .album-card:hover { box-shadow: 0 0 0 2px #1a73e8; }
-/* The cover is the actual flow content of the card. padding-bottom: 100%
-   makes its height equal to its width, so the card itself is intrinsically
-   a square in the grid track without relying on aspect-ratio. */
 .album-card .cover {
-  position: relative;
-  width: 100%;
-  padding-bottom: 100%;
-  background: #ddd;
-}
-.album-card .cover img {
   position: absolute;
   inset: 0;
+}
+.album-card .cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;

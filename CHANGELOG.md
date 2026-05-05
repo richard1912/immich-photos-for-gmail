@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.10 (2026-05-05)
+
+### Fixed
+- Album cards still overlapped each other after 0.2.9. Replaced the responsive 1fr-column grid + intrinsic-ratio sizing with a fixed-pixel grid: each card is a hard `200x200` box, with the grid using `repeat(auto-fill, 200px)` columns and `grid-auto-rows: 200px`. Math is now deterministic, the 12px gap is honored, and cards can never bleed into adjacent rows.
+
 ## 0.2.9 (2026-05-05)
 
 ### Fixed
