@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.18 (2026-05-06)
+
+### Changed
+- Bumped `strict_min_version` from `128.0` to `140.0`. The new `data_collection_permissions` manifest key (added in 0.2.17) is only honoured by Firefox 140+ / Firefox for Android 142+, so anything below that wouldn't see the data-consent disclosure. Bumping the floor silences AMO's two "Manifest key not supported by the specified minimum Firefox version" warnings.
+
 ## 0.2.17 (2026-05-06)
 
 ### Changed
