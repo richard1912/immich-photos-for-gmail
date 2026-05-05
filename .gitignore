@@ -2,6 +2,10 @@
 *.xpi
 *.zip
 
+# Local-only notes
+PROMO.md
+TODO.md
+
 # Editor / OS
 .vscode/
 .idea/
