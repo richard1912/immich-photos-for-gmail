@@ -19,7 +19,7 @@ A Firefox extension that lets you attach photos from your self-hosted [Immich](h
 <p align="center">
   <img src="assets/new-email.jpg" alt="The Immich button injected into the Gmail compose toolbar" width="640" />
   <br />
-  <em>The Immich button slots in next to the standard Gmail toolbar.</em>
+  <em>The Immich button sits inline in the Gmail compose action toolbar.</em>
 </p>
 
 <p align="center">
