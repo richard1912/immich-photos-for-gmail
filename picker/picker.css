@@ -87,6 +87,7 @@ body {
   overflow: hidden;
   border: 1px solid #e0e0e0;
   background: #fafafa;
+  min-height: 220px;
 }
 .album-card:hover { border-color: #1a73e8; }
 .album-card .cover {
@@ -187,6 +188,7 @@ body {
 }
 .spacer { flex: 1; }
 .count { color: #5f6368; font-size: 13px; }
+.version { color: #9aa0a6; font-size: 11px; font-variant-numeric: tabular-nums; }
 .opt {
   display: inline-flex;
   align-items: center;

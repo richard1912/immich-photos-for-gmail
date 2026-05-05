@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.4 (2026-05-05)
+
+### Fixed
+- Hard `min-height: 220px` safety net on `.album-card` so cards can never collapse to a thin line, even if the cover ratio fails for any reason. The 0.2.3 fix was correct but only worked once Firefox actually picked up the new CSS.
+
+### Added
+- Version label in the picker footer so it's unambiguous which build is loaded after a reload (e.g. `v0.2.4`).
+- `console.warn` line on the Albums tab printing how many albums came back from the API.
+
 ## 0.2.3 (2026-05-05)
 
 ### Fixed

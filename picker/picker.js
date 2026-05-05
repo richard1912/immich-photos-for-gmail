@@ -55,7 +55,13 @@ function initPicker() {
     close: document.getElementById("close"),
     sentinel: document.getElementById("sentinel"),
     optShrink: document.getElementById("opt-shrink"),
+    version: document.getElementById("version"),
   };
+
+  try {
+    const v = browser.runtime.getManifest().version;
+    if (els.version) els.version.textContent = `v${v}`;
+  } catch (_) {}
 
   // Persist toggle state across sessions.
   browser.storage.local.get("attachOpts").then(({ attachOpts }) => {
@@ -233,6 +239,7 @@ function initPicker() {
     clearError();
     try {
       const albums = await call("listAlbums");
+      console.warn("[immich-picker] albums loaded:", Array.isArray(albums) ? albums.length : albums);
       if (!albums || albums.length === 0) {
         els.empty.hidden = false;
       }
