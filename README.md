@@ -69,7 +69,7 @@ The settings page will open automatically on first install.
 ## Setup
 
 1. In Immich → click your profile → **Account Settings** → **API Keys** → **New API Key**.
-2. Copy the generated key.
+2. Tick these permissions (or just **all**): `asset.read`, `asset.download`, `asset.view`, `album.read`, `albumAsset.read`, `search.read`. Copy the generated key.
 3. In the extension settings tab:
    - **Immich base URL**: e.g. `https://immich.example.com` (no trailing slash).
    - **API key**: paste the key.
