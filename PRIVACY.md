@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**Immich Photos for Gmail** is a Firefox extension. It does not have any backend servers and does not collect any data about you.
+**Immich Photos for Gmail** is a browser extension (Firefox and Chrome / Edge). It does not have any backend servers and does not collect any data about you.
 
 ## What data is stored
 
