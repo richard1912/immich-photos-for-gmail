@@ -24,13 +24,13 @@ A browser extension that lets you attach photos from your self-hosted [Immich](h
 </p>
 
 <p align="center">
-  <img src="assets/upload-screen.jpg" alt="The Immich picker showing the Recent tab with a thumbnail grid" width="780" />
+  <img src="assets/upload-screen.png" alt="The Immich picker showing the Recent tab with a thumbnail grid" width="780" />
   <br />
   <em>The picker. Recent, Search, Albums tabs. Multi-select. Optional resize and strip-metadata toggle in the footer.</em>
 </p>
 
 <p align="center">
-  <img src="assets/albums.jpg" alt="The Immich picker Albums tab with a live filter input and a grid of square album cards" width="780" />
+  <img src="assets/albums.png" alt="The Immich picker Albums tab with a live filter input and a grid of square album cards" width="780" />
   <br />
   <em>Albums tab with a live filter and a square-card grid. Each card shows the album cover, name, and item count.</em>
 </p>
