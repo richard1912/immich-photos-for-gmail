@@ -13,18 +13,37 @@
 
   const BUTTON_MARK = "data-immich-attach-injected";
   const BRIDGE_TAG = "__IMMICH_ATTACH__";
+  const PAPERCLIP_SELECTOR =
+    '[aria-label="Attach files"], [data-tooltip="Attach files"], [command="Files"]';
 
   let pickerFrame = null;
   let pickerOverlay = null;
   let pickerTargetCompose = null;
 
-  function findComposeDialogs() {
-    return Array.from(document.querySelectorAll('div[role="dialog"]'))
-      .filter((d) => d.querySelector('div[contenteditable="true"][role="textbox"]'));
+  // Anchor on the "Attach files" paperclip rather than the dialog wrapper —
+  // inline replies in a conversation thread are not wrapped in a role=dialog,
+  // but every compose toolbar (popup or inline) has its own paperclip.
+  function findComposeAnchors() {
+    return Array.from(document.querySelectorAll(PAPERCLIP_SELECTOR));
   }
 
-  function injectButton(compose) {
-    if (compose.getAttribute(BUTTON_MARK)) return;
+  // Walk up from the paperclip until we find an ancestor that also contains the
+  // editor textbox — that's the smallest element that scopes a single compose.
+  function composeContainerFor(paperclip) {
+    let el = paperclip.parentElement;
+    while (el && el !== document.body) {
+      if (el.querySelector('div[contenteditable="true"][role="textbox"]')) {
+        return el;
+      }
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function injectButton(paperclip) {
+    if (paperclip.getAttribute(BUTTON_MARK)) return;
+    const compose = composeContainerFor(paperclip);
+    if (!compose) return;
 
     const btn = document.createElement("button");
     btn.type = "button";
@@ -39,29 +58,18 @@
       openPicker(compose);
     });
 
-    // Prefer placing the button inline with the toolbar icons by inserting
-    // right after the paperclip ("Attach files") button. Falls back to the
-    // outer .btC container, then to a floating absolute-positioned button.
-    const paperclip = compose.querySelector(
-      '[aria-label="Attach files"], [data-tooltip="Attach files"], [command="Files"]'
-    );
-    if (paperclip && paperclip.parentNode) {
+    if (paperclip.parentNode) {
       paperclip.parentNode.insertBefore(btn, paperclip.nextSibling);
     } else {
-      const iconRow = compose.querySelector(".aDh, .a8X, .btC");
-      if (iconRow) {
-        iconRow.appendChild(btn);
-      } else {
-        btn.classList.add("immich-attach-floating");
-        compose.appendChild(btn);
-      }
+      btn.classList.add("immich-attach-floating");
+      compose.appendChild(btn);
     }
 
-    compose.setAttribute(BUTTON_MARK, "1");
+    paperclip.setAttribute(BUTTON_MARK, "1");
   }
 
   function scanCompose() {
-    for (const dlg of findComposeDialogs()) injectButton(dlg);
+    for (const p of findComposeAnchors()) injectButton(p);
   }
 
   function openPicker(compose) {

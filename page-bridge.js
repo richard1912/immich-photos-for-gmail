@@ -33,13 +33,24 @@
   // Populate Gmail's existing "Filedata" file input. Gmail wires a change
   // handler on it that uploads the file as a real attachment chip, same code
   // path as clicking the paperclip + picking a file from disk.
+  function findScopedFileInput(target) {
+    // Walk up from the editor until we find an ancestor that owns its own
+    // file input. Inline replies aren't wrapped in [role=dialog], so we can't
+    // rely on closest('[role=dialog]') — but every compose subtree (popup or
+    // inline) has its own input[type=file] sibling to the editor.
+    let el = target;
+    while (el && el !== document.body) {
+      const input = el.querySelector('input[type="file"]');
+      if (input) return input;
+      el = el.parentElement;
+    }
+    return document.querySelector('input[type="file"]');
+  }
+
   function attachViaFileInput(target, files) {
-    const compose = target.closest('[role="dialog"]') || document;
-    const input =
-      compose.querySelector('input[type="file"]') ||
-      document.querySelector('input[type="file"]');
+    const input = findScopedFileInput(target);
     if (!input) {
-      warn("no file input found in compose dialog");
+      warn("no file input found in compose");
       return false;
     }
     try {
