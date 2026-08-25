@@ -48,21 +48,31 @@ A browser extension that lets you attach photos from your self-hosted [Immich](h
 
 ### Firefox
 
-> Mozilla AMO listing pending. For now, the extension is distributed as a signed `.xpi` via GitHub Releases.
+Install from [Mozilla Add-ons](https://addons.mozilla.org/firefox/addon/immich-photos-for-gmail/), then approve the permission prompt for `mail.google.com`.
+
+<details>
+<summary>Sideload a signed <code>.xpi</code> instead</summary>
 
 1. Download the latest `immich-photos-for-gmail-X.Y.Z.xpi` from the [Releases page](https://github.com/richard1912/immich-photos-for-gmail/releases).
 2. Open Firefox → `about:addons`.
 3. Drag the `.xpi` onto the page (or click the gear icon → **Install Add-on From File…**).
 4. Approve the permission prompt for `mail.google.com`.
 
+</details>
+
 ### Chrome / Edge
 
-> Chrome Web Store listing pending. For now, load as an unpacked extension.
+Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/immich-photos-for-gmail/kjfapmcendhiggjpdhbgcjabibpcgndf), then approve the permission prompt for `mail.google.com`. Edge installs Chrome Web Store extensions once you allow it at the banner.
+
+<details>
+<summary>Load unpacked instead</summary>
 
 1. Download `immich-photos-for-gmail-X.Y.Z-chrome.zip` from the [Releases page](https://github.com/richard1912/immich-photos-for-gmail/releases) and unzip it (or [build from source](#chrome--edge-build)).
 2. Open `chrome://extensions` (or `edge://extensions`) and enable **Developer mode**.
 3. Click **Load unpacked** and select the unzipped folder.
 4. Approve the permission prompt for `mail.google.com`.
+
+</details>
 
 The settings page will open automatically on first install.
 

@@ -1,6 +1,15 @@
 # Changelog
 
+## 0.2.20 (2026-05-07)
+
+### Changed
+- Version bump only, no code change from 0.2.19. Republished to the AMO listed channel and to the Chrome Web Store. The store's 0.2.19 package was built before the inline-reply fix landed, so 0.2.20 is the first store build that carries it.
+
 ## 0.2.19 (2026-05-06)
+
+### Added
+- Support Gmail inline replies. The Immich button now appears on every compose toolbar, popout / new message as well as inline replies inside a conversation thread. It anchors on the "Attach files" paperclip instead of the `[role=dialog]` wrapper, which inline replies don't have, and the page bridge walks up from the editor to find that compose's own `input[type=file]` rather than the first one on the page.
+- Chrome / Edge support: an MV3 (`service_worker`) manifest built by `scripts/build_chrome.py`, published alongside the Firefox `.xpi`.
 
 ### Changed
 - Bumped `strict_min_version` again from `140.0` to `142.0`. AMO flagged that `data_collection_permissions` was only honoured by Firefox for Android 142+ (one release later than desktop's 140). The 142 floor satisfies both desktop and Android.
