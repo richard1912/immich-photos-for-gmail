@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.22 (2026-10-15)
+
+### Fixed
+- Clicking the Immich button in a Gmail tab that was open before the extension updated or reloaded threw "Extension context invalidated" and did nothing. The button now changes to "Refresh Gmail" so you know to reload the tab.
+
 ## 0.2.21 (2026-10-15)
 
 ### Fixed

@@ -55,6 +55,15 @@
     btn.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
+      // After the extension updates or reloads, this tab's content script is
+      // orphaned and every browser.* call throws "Extension context
+      // invalidated". Tell the user to refresh instead of failing silently.
+      if (!contextAlive()) {
+        const label = btn.querySelector(".immich-attach-label");
+        if (label) label.textContent = "Refresh Gmail";
+        btn.title = "Immich Photos was updated. Refresh this Gmail tab to use it.";
+        return;
+      }
       openPicker(compose);
     });
 
@@ -66,6 +75,10 @@
     }
 
     paperclip.setAttribute(BUTTON_MARK, "1");
+  }
+
+  function contextAlive() {
+    try { return !!browser.runtime?.id; } catch { return false; }
   }
 
   function scanCompose() {
