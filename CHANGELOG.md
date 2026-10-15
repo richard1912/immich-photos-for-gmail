@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.23 (2026-10-15)
+
+### Fixed
+- Save & Connect failed with a 403 for API keys scoped to just the documented permissions on Immich 3.x, which gates `/api/users/me` behind `user.read`. Settings now falls back to a search probe and reports "Connected."
+- The documented API key permissions were out of date: Immich 3.x removed `albumAsset.read` and `search.read`. The list is now `asset.read`, `asset.download`, `asset.view`, `album.read`, plus optional `user.read`.
+
+### Changed
+- After the extension installs or updates, it re-injects itself into Gmail tabs that are already open, so the Immich button keeps working without a page refresh. Adds the `scripting` permission (no install warning).
+
 ## 0.2.22 (2026-10-15)
 
 ### Fixed

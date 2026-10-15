@@ -197,6 +197,30 @@ browser.runtime.onInstalled.addListener(async (details) => {
   }
 });
 
+// Manifest content scripts only run on page load, so Gmail tabs already open
+// at install or update would have no button (or a dead one) until refreshed.
+// Inject into them now. page-bridge.js guards against a second copy itself.
+browser.runtime.onInstalled.addListener(async ({ reason }) => {
+  if (reason !== "install" && reason !== "update") return;
+  if (!browser.scripting) return;
+  let tabs = [];
+  try {
+    tabs = await browser.tabs.query({ url: "https://mail.google.com/*" });
+  } catch (e) {
+    console.warn("[immich] could not list Gmail tabs:", e);
+  }
+  for (const tab of tabs) {
+    const target = { tabId: tab.id };
+    try {
+      await browser.scripting.executeScript({ target, files: ["page-bridge.js"], world: "MAIN" });
+      await browser.scripting.insertCSS({ target, files: ["content/content.css"] });
+      await browser.scripting.executeScript({ target, files: ["content/content.js"] });
+    } catch (e) {
+      console.warn("[immich] could not refresh Gmail tab", tab.id, e);
+    }
+  }
+});
+
 // Use the sendResponse + return true pattern. Chrome MV3 ignores a Promise
 // returned from a listener, so a Firefox-only Promise return would silently
 // drop replies in Chrome. This pattern works in both browsers.

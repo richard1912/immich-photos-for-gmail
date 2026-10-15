@@ -210,7 +210,17 @@
     setTimeout(() => dropTarget.removeAttribute("data-immich-drop-target"), 1000);
   }
 
-  const obs = new MutationObserver(() => scanCompose());
+  // When background.js re-injects this script after an update, the previous
+  // copy is still on the page but can no longer reach the extension. Drop its
+  // buttons so scanCompose() adds live ones in their place.
+  document.querySelectorAll(".immich-attach-btn").forEach((b) => b.remove());
+  document.querySelectorAll(`[${BUTTON_MARK}]`).forEach((p) => p.removeAttribute(BUTTON_MARK));
+
+  const obs = new MutationObserver(() => {
+    // Orphaned copies stop watching so they never re-add dead buttons.
+    if (!contextAlive()) { obs.disconnect(); return; }
+    scanCompose();
+  });
   obs.observe(document.body, { childList: true, subtree: true });
   scanCompose();
 })();
