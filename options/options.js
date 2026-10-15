@@ -89,7 +89,8 @@ $("save").addEventListener("click", async () => {
   const resp = await browser.runtime.sendMessage({ type: "ping" });
   if (resp && resp.ok && resp.data && resp.data.ok) {
     const user = resp.data.user || {};
-    setStatus(`Connected as ${user.email || user.name || "user"}.`, "ok");
+    const who = user.email || user.name;
+    setStatus(who ? `Connected as ${who}.` : "Connected.", "ok");
   } else {
     const err = (resp && (resp.error || (resp.data && resp.data.error))) || "unknown error";
     setStatus(`Saved, but connection failed: ${err}`, "err");

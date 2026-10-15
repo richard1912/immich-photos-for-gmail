@@ -124,6 +124,18 @@ const handlers = {
       const ping = await fetch(`${baseUrl}/api/server/ping`, { headers: { "x-api-key": apiKey } });
       if (!ping.ok) return { ok: false, error: `ping ${ping.status}` };
       const me = await fetch(`${baseUrl}/api/users/me`, { headers: { "x-api-key": apiKey } });
+      // Immich 3.x gates users/me behind user.read, which a key scoped to
+      // just what the picker needs won't have. Fall back to a call the
+      // picker itself makes so a valid key still connects.
+      if (me.status === 403) {
+        const probe = await fetch(`${baseUrl}/api/search/metadata`, {
+          method: "POST",
+          headers: { "x-api-key": apiKey, "Content-Type": "application/json" },
+          body: JSON.stringify({ page: 1, size: 1 }),
+        });
+        if (!probe.ok) return { ok: false, error: `search/metadata ${probe.status}` };
+        return { ok: true, user: null };
+      }
       if (!me.ok) return { ok: false, error: `users/me ${me.status}` };
       const user = await me.json();
       return { ok: true, user };

@@ -36,7 +36,7 @@ Your Immich URL and API key are stored locally in your browser and are only ever
 <strong>Setup</strong>
 <ol>
 <li>In Immich, go to your profile → Account Settings → API Keys → New API Key.</li>
-<li>Tick these permissions (or just "all"): asset.read, asset.download, asset.view, album.read, albumAsset.read, search.read.</li>
+<li>Tick these permissions (or just "all"): asset.read, asset.download, asset.view, album.read, user.read (optional, only used to show your name in Settings).</li>
 <li>Open the extension settings, paste your Immich base URL and API key, and click Save &amp; Connect.</li>
 <li>Open Gmail, click Compose, and the Immich button appears next to the paperclip.</li>
 </ol>
