@@ -223,13 +223,7 @@ function initPicker() {
         if (!state.query) { state.loading = false; setStatus("none"); return; }
         data = await call("searchSmart", { query: state.query, page: state.page, size: state.pageSize });
       } else if (state.tab === "albums" && state.albumId) {
-        data = await call("listAlbumAssets", { albumId: state.albumId });
-        const assets = (data && data.assets) || [];
-        renderAssets(assets);
-        state.done = true;
-        setStatus(assets.length === 0 ? "empty" : "none");
-        state.loading = false;
-        return;
+        data = await call("listAlbumAssets", { albumId: state.albumId, page: state.page, size: state.pageSize });
       } else {
         state.loading = false;
         setStatus("none");
@@ -266,12 +260,19 @@ function initPicker() {
   // its height to match its width so the card stays square. This bypasses
   // any aspect-ratio / padding-bottom interaction with grid sizing that
   // earlier attempts kept getting wrong.
+  // Heights are applied in the next frame: writing layout inside the
+  // callback (e.g. when a scrollbar appears) trips Chrome's
+  // "ResizeObserver loop completed with undelivered notifications".
   const cardRO = (typeof ResizeObserver !== "undefined")
     ? new ResizeObserver((entries) => {
+        const sizes = [];
         for (const e of entries) {
           const w = e.contentRect && e.contentRect.width;
-          if (w && w > 0) e.target.style.height = w + "px";
+          if (w && w > 0) sizes.push([e.target, w]);
         }
+        requestAnimationFrame(() => {
+          for (const [el, w] of sizes) el.style.height = w + "px";
+        });
       })
     : null;
 

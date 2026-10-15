@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.21 (2026-10-15)
+
+### Fixed
+- Albums showed "No photos found" on Immich 3.x, which no longer embeds assets in `GET /api/albums/{id}`. Album contents now come from `POST /api/search/metadata` with `albumIds`, paged like Recent and Search (works on Immich 2.x and late 1.x too). Photos only, so videos in an album are skipped.
+- Silenced Chrome's "ResizeObserver loop completed with undelivered notifications" warning by applying square-card heights on the next frame.
+
 ## 0.2.20 (2026-05-07)
 
 ### Changed

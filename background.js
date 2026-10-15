@@ -150,8 +150,13 @@ const handlers = {
     return immichJson("/api/albums");
   },
 
-  async listAlbumAssets({ albumId }) {
-    return immichJson(`/api/albums/${encodeURIComponent(albumId)}`);
+  // Immich 3.x no longer embeds assets in GET /api/albums/{id}, so page
+  // through the album via metadata search instead.
+  async listAlbumAssets({ albumId, page = 1, size = 60 }) {
+    return immichJson("/api/search/metadata", {
+      method: "POST",
+      body: { albumIds: [albumId], page, size, order: "desc", withExif: false, type: "IMAGE" },
+    });
   },
 
   async fetchThumbnail({ assetId, size = "preview" }) {
