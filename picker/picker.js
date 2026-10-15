@@ -243,6 +243,12 @@ function initPicker() {
     } finally {
       state.loading = false;
     }
+    // IntersectionObserver only fires on a change, so if one page doesn't
+    // push the sentinel out of range (wide window, short page) keep filling.
+    if (!state.done) requestAnimationFrame(() => {
+      const wrap = document.querySelector(".grid-wrap");
+      if (els.sentinel.getBoundingClientRect().top < wrap.getBoundingClientRect().bottom + 300) loadMore();
+    });
   }
 
   const scrollObs = new IntersectionObserver(
